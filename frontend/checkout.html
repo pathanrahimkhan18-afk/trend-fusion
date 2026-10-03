@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — TrendFusion</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>.hidden { display: none !important; }</style>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="body-root">
+
+<div id="tf-transition" style="transform:scaleY(1);"></div>
+<div id="tf-loader">
+  <div class="loader-inner">
+    <p class="font-display loader-title">TrendFusion</p>
+    <div class="tf-loader-ring"></div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="tf-nav" class="nav-scrolled">
+  <a href="index.html" class="nav-logo">TrendFusion</a>
+  <div class="nav-actions">
+    <a href="cart.html" class="nav-link nav-cart-wrap" aria-label="Cart">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+      </svg>
+      <span data-cart-count class="cart-count-badge hidden"></span>
+    </a>
+  </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<main class="co-main">
+
+  <!-- Header -->
+  <div class="co-page-header">
+    <div class="co-back-row">
+      <a href="cart.html" class="co-back-link">← Cart</a>
+    </div>
+    <h1 class="font-display co-page-title" data-reveal>Checkout</h1>
+  </div>
+
+  <div class="co-body">
+    <div class="co-layout-grid">
+
+      <!-- LEFT: Delivery + Payment -->
+      <div class="co-left-col">
+
+        <!-- Step 1: Shipping Address -->
+        <section class="co-section">
+          <p class="section-label co-section-label">01 — Delivery Address</p>
+
+          <!-- Saved Addresses -->
+          <div id="saved-addresses-wrap" class="hidden co-saved-addresses-wrap">
+            <p class="co-saved-hint">Select a saved address or enter a new one</p>
+            <div id="saved-addresses-list" class="co-saved-addresses-grid"></div>
+          </div>
+
+          <!-- Address Form -->
+          <div class="co-address-grid" id="address-fields">
+            <div class="co-field-full">
+              <label class="section-label co-field-label">Full Name *</label>
+              <input type="text" id="ship-name" class="co-input" placeholder="Recipient name" required />
+            </div>
+            <div class="co-field-full">
+              <label class="section-label co-field-label">Phone *</label>
+              <input type="tel" id="ship-phone" class="co-input" placeholder="10-digit mobile" required />
+            </div>
+            <div class="co-field-full">
+              <label class="section-label co-field-label">Street Address *</label>
+              <input type="text" id="ship-street" class="co-input" placeholder="Building, street, area" required />
+            </div>
+            <div>
+              <label class="section-label co-field-label">City *</label>
+              <input type="text" id="ship-city" class="co-input" required />
+            </div>
+            <div>
+              <label class="section-label co-field-label">State *</label>
+              <input type="text" id="ship-state" class="co-input" required />
+            </div>
+            <div>
+              <label class="section-label co-field-label">PIN Code *</label>
+              <input type="text" id="ship-postal" class="co-input" required />
+            </div>
+            <div>
+              <label class="section-label co-field-label">Country</label>
+              <input type="text" id="ship-country" value="India" class="co-input" required />
+            </div>
+          </div>
+          <div class="co-note-row">
+            <label class="co-note-label">
+              <input type="text" id="customer-note" class="co-input co-note-input" placeholder="Order note (optional)" />
+            </label>
+          </div>
+        </section>
+
+        <!-- Step 2: Payment Method -->
+        <section class="co-section">
+          <p class="section-label co-section-label">02 — Payment</p>
+          <div class="co-payment-options">
+            <label class="co-payment-option">
+              <input type="radio" name="payment-method" value="razorpay" checked class="co-radio" />
+              <div>
+                <p class="co-payment-title">Pay Online</p>
+                <p class="co-payment-subtitle">Credit/Debit card, UPI, Net Banking via Razorpay</p>
+              </div>
+              <svg class="co-payment-logo" width="60" height="24" viewBox="0 0 80 30" fill="none">
+                <text x="0" y="22" font-size="18" font-weight="bold" fill="#0d2366" font-family="Arial">Razorpay</text>
+              </svg>
+            </label>
+            <label class="co-payment-option">
+              <input type="radio" name="payment-method" value="cod" class="co-radio" />
+              <div>
+                <p class="co-payment-title">Cash on Delivery</p>
+                <p class="co-payment-subtitle">Pay when your order arrives</p>
+              </div>
+            </label>
+          </div>
+        </section>
+
+        <!-- Place Order Button — mobile only -->
+        <div class="co-mobile-cta">
+          <button id="place-order-btn-mobile" class="btn-primary co-place-order-btn" onclick="placeOrder()">
+            Place Order
+          </button>
+          <p id="checkout-error-mobile" class="co-error hidden"></p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Order Summary -->
+      <div class="co-summary-sticky">
+        <div class="co-summary-box">
+          <p class="section-label co-section-label">Order Summary</p>
+
+          <!-- Items -->
+          <div id="checkout-items" class="co-summary-items">
+            <p class="co-summary-loading">Loading cart...</p>
+          </div>
+
+          <div class="co-summary-totals">
+            <div class="co-summary-row co-summary-row--sm">
+              <span>Subtotal</span>
+              <span id="checkout-subtotal">—</span>
+            </div>
+            <div class="co-summary-row co-summary-row--sm">
+              <span>Shipping</span>
+              <span id="checkout-shipping">Free</span>
+            </div>
+            <div class="co-summary-row co-summary-row--total">
+              <span>Total</span>
+              <span id="checkout-total">—</span>
+            </div>
+          </div>
+
+          <button id="place-order-btn" class="btn-primary co-place-order-btn co-place-order-desktop hidden" onclick="placeOrder()">
+            Place Order
+          </button>
+          <p id="checkout-error" class="co-error hidden"></p>
+
+          <p class="co-terms-note">
+            By placing your order you agree to our terms of service
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- Order Success Modal -->
+<div id="order-success-modal" class="hidden co-modal-overlay">
+  <div class="co-modal-box">
+    <div class="co-modal-icon">
+      <svg width="28" height="28" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+      </svg>
+    </div>
+    <h2 class="font-display co-modal-title">Order Placed!</h2>
+    <p class="co-modal-order-num" id="success-order-number"></p>
+    <p class="co-modal-subtitle">You will receive a confirmation shortly</p>
+    <a href="profile.html" class="btn-primary co-modal-btn-block">View My Orders</a>
+    <a href="products.html" class="btn-outline co-modal-btn-block">Continue Shopping</a>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.3/dist/lenis.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+let cartData   = null;
+let userData   = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  window.TF.Auth.requireAuthOrRedirect();
+
+  // Load cart + user profile in parallel
+  try {
+    const [cartRes, profileRes] = await Promise.allSettled([
+      window.TF.Cart.fetchCart(),
+      window.TF.UserAPI.getProfile(),
+    ]);
+
+    // Cart
+    if (cartRes.status === 'fulfilled' && cartRes.value?.items?.length) {
+      cartData = cartRes.value;
+      renderCheckoutItems(cartData);
+    } else {
+      window.location.href = 'cart.html';
+      return;
+    }
+
+    // Profile
+    if (profileRes.status === 'fulfilled') {
+      userData = profileRes.value?.data?.data?.user || null;
+      if (userData) prefillFromProfile(userData);
+    }
+
+  } catch {
+    window.location.href = 'cart.html';
+  }
+});
+
+function renderCheckoutItems(cart) {
+  const items = cart?.items || [];
+  if (!items.length) { window.location.href = 'cart.html'; return; }
+
+  const itemsEl = document.getElementById('checkout-items');
+  itemsEl.innerHTML = items.map(item => `
+    <div class="co-summary-item">
+      <div class="co-summary-item-img">
+        <img src="${item.product?.images?.[0]?.url || ''}" class="co-summary-item-img-inner" alt="${item.product?.name || 'Product'}" />
+      </div>
+      <div class="co-summary-item-info">
+        <p class="co-summary-item-name">${item.product?.name || 'Product'}</p>
+        <p class="co-summary-item-meta">${item.size || ''} · Qty ${item.quantity}</p>
+        <p class="co-summary-item-price">${window.TF.formatCurrencyUSD(item.price * item.quantity)}</p>
+      </div>
+    </div>
+  `).join('');
+
+  const subtotal = cart.totalPrice || items.reduce((s, i) => s + i.price * i.quantity, 0);
+  const shipping = subtotal >= 999 ? 0 : 99;
+  const tax      = Math.round(subtotal * 0.18);
+  const total    = subtotal + shipping + tax;
+
+  document.getElementById('checkout-subtotal').textContent = window.TF.formatCurrencyUSD(subtotal);
+  document.getElementById('checkout-shipping').textContent = shipping === 0 ? 'Free' : window.TF.formatCurrencyUSD(shipping);
+  document.getElementById('checkout-total').textContent    = window.TF.formatCurrencyUSD(total);
+
+  document.getElementById('place-order-btn').classList.remove('hidden');
+  document.getElementById('place-order-btn').classList.add('block');
+}
+
+function prefillFromProfile(user) {
+  if (user.name)  document.getElementById('ship-name').value  = user.name;
+  if (user.phone) document.getElementById('ship-phone').value = user.phone;
+  loadSavedAddresses(user);
+}
+
+async function loadSavedAddresses(user) {
+  try {
+    const res       = await window.TF.UserAPI.getAddresses();
+    const addresses = res?.data?.data?.addresses || [];
+    if (!addresses.length) return;
+
+    document.getElementById('saved-addresses-wrap').classList.remove('hidden');
+    const listEl = document.getElementById('saved-addresses-list');
+    listEl.innerHTML = addresses.map((addr, i) => `
+      <label class="co-saved-addr-option" onclick="fillAddress(${JSON.stringify(addr).replace(/"/g,'&quot;')})">
+        <input type="radio" name="saved-addr" value="${addr._id}" ${i === 0 && addr.isDefault ? 'checked' : ''} class="co-radio co-radio--top flex-shrink-0" />
+        <div>
+          <p class="co-saved-addr-label">${addr.label}</p>
+          <p class="co-saved-addr-text">${addr.street}, ${addr.city}, ${addr.state} ${addr.postalCode}</p>
+        </div>
+      </label>
+    `).join('') + `
+      <label class="co-saved-addr-option">
+        <input type="radio" name="saved-addr" value="new" class="co-radio co-radio--top flex-shrink-0" onchange="clearAddressFields()" />
+        <div>
+          <p class="co-saved-addr-label">New Address</p>
+        </div>
+      </label>
+    `;
+
+    const defaultAddr = addresses.find(a => a.isDefault) || addresses[0];
+    if (defaultAddr) fillAddress(defaultAddr);
+
+  } catch { /* skip — manual entry still works */ }
+}
+
+window.fillAddress = (addr) => {
+  document.getElementById('ship-name').value   = addr.name   || userData?.name   || '';
+  document.getElementById('ship-phone').value  = addr.phone  || userData?.phone  || '';
+  document.getElementById('ship-street').value = addr.street || '';
+  document.getElementById('ship-city').value   = addr.city   || '';
+  document.getElementById('ship-state').value  = addr.state  || '';
+  document.getElementById('ship-postal').value = addr.postalCode || '';
+  document.getElementById('ship-country').value= addr.country || 'India';
+};
+
+window.clearAddressFields = () => {
+  ['ship-name','ship-phone','ship-street','ship-city','ship-state','ship-postal'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('ship-country').value = 'India';
+};
+
+function getShippingAddress() {
+  return {
+    name      : document.getElementById('ship-name').value.trim(),
+    phone     : document.getElementById('ship-phone').value.trim(),
+    street    : document.getElementById('ship-street').value.trim(),
+    city      : document.getElementById('ship-city').value.trim(),
+    state     : document.getElementById('ship-state').value.trim(),
+    postalCode: document.getElementById('ship-postal').value.trim(),
+    country   : document.getElementById('ship-country').value.trim() || 'India',
+  };
+}
+
+function showError(msg) {
+  ['checkout-error','checkout-error-mobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = msg; el.classList.remove('hidden'); }
+  });
+}
+
+function hideError() {
+  ['checkout-error','checkout-error-mobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+}
+
+window.placeOrder = async () => {
+  hideError();
+  const addr   = getShippingAddress();
+  const method = document.querySelector('input[name="payment-method"]:checked')?.value || 'razorpay';
+  const note   = document.getElementById('customer-note').value.trim();
+
+  const required = ['name','phone','street','city','state','postalCode'];
+  for (const field of required) {
+    if (!addr[field]) {
+      showError(`Please fill in all required delivery fields`);
+      return;
+    }
+  }
+
+  const btns = document.querySelectorAll('#place-order-btn, #place-order-btn-mobile');
+  btns.forEach(b => { b.disabled = true; b.textContent = 'Processing...'; });
+
+  try {
+    const orderPayload = {
+      shippingAddress: addr,
+      paymentMethod  : method,
+      customerNote   : note || undefined,
+    };
+
+    const orderRes  = await window.TF.OrdersAPI.createOrder(orderPayload);
+    const order     = orderRes.data.data.order;
+
+    if (method === 'cod') {
+      await window.TF.Cart.clearCart();
+      showSuccessModal(order.orderNumber);
+      return;
+    }
+
+    const payRes = await window.TF.PaymentsAPI.createRazorpayOrder({ orderId: order._id });
+    const pay    = payRes.data.data;
+
+    const rzpOptions = {
+      key          : pay.keyId,
+      amount       : pay.amount,
+      currency     : pay.currency,
+      order_id     : pay.razorpayOrderId,
+      name         : 'TrendFusion',
+      description  : `Order ${pay.orderNumber}`,
+      prefill: {
+        name   : addr.name,
+        contact: addr.phone,
+        email  : userData?.email || '',
+      },
+      theme: { color: '#0f0f0f' },
+      handler: async (response) => {
+        try {
+          await window.TF.PaymentsAPI.verifyPayment({
+            razorpay_order_id  : response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature : response.razorpay_signature,
+          });
+          // await window.TF.Cart.clearCart();
+          showSuccessModal(pay.orderNumber);
+        } catch {
+          window.TF.Toast.show('Payment verification failed. Contact support.', 'error');
+          btns.forEach(b => { b.disabled = false; b.textContent = 'Place Order'; });
+        }
+      },
+      modal: {
+        ondismiss: () => {
+          btns.forEach(b => { b.disabled = false; b.textContent = 'Place Order'; });
+          window.TF.Toast.show('Payment cancelled', 'info');
+        },
+      },
+    };
+
+    const rzp = new Razorpay(rzpOptions);
+    rzp.open();
+
+  } catch (err) {
+    const msg = err.response?.data?.message || 'Something went wrong. Please try again.';
+    showError(msg);
+    btns.forEach(b => { b.disabled = false; b.textContent = 'Place Order'; });
+  }
+};
+
+function showSuccessModal(orderNumber) {
+  document.getElementById('success-order-number').textContent = `Order #${orderNumber}`;
+  document.getElementById('order-success-modal').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrendFusion — Editorial Fashion</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="body-root">
+
+<!-- Page Transition Overlay -->
+<div id="tf-transition" style="transform: scaleY(1);"></div>
+
+<!-- Loader -->
+<div id="tf-loader">
+  <div class="loader-inner">
+    <p class="font-display loader-title">TrendFusion</p>
+    <div class="tf-loader-ring mx-auto"></div>
+  </div>
+</div>
+
+<!-- ─── NAVBAR ──────────────────────────────────────────────── -->
+<nav id="tf-nav" class="nav-container">
+  <!-- Logo -->
+  <a href="index.html" class="font-display nav-logo">TrendFusion</a>
+
+  <!-- Desktop Nav -->
+  <div class="nav-desktop-links">
+    <!-- Collections with Mega Menu -->
+    <div class="nav-mega-trigger" id="collections-trigger">
+      <button class="nav-link nav-btn-flex">
+        Collections
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l4 4 4-4"/></svg>
+      </button>
+      <div class="mega-menu" id="mega-menu">
+        <div class="mega-menu-inner">
+          <div>
+            <p class="section-label mega-col-label">Clothing</p>
+            <ul class="mega-menu-list">
+              <li><a href="products.html?category=Dresses" class="mega-menu-link">Dresses</a></li>
+              <li><a href="products.html?category=Tops" class="mega-menu-link">Tops</a></li>
+              <li><a href="products.html?category=Bottoms" class="mega-menu-link">Bottoms</a></li>
+              <li><a href="products.html?category=Outerwear" class="mega-menu-link">Outerwear</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="section-label mega-col-label">Accessories</p>
+            <ul class="mega-menu-list">
+              <li><a href="products.html?category=Accessories" class="mega-menu-link">All Accessories</a></li>
+            </ul>
+          </div>
+          <div class="mega-col-feature">
+            <div class="mega-feature-img-wrap">
+              <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=900&q=80" class="mega-feature-img" alt="Collection" />
+            </div>
+            <p class="font-display mega-feature-caption">New Season Arrivals</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="products.html" class="nav-link">Shop All</a>
+    <a href="products.html?badge=New" class="nav-link">New In</a>
+    <a href="products.html?badge=Sale" class="nav-link">Sale</a>
+  </div>
+
+  <!-- Right Actions -->
+  <div class="nav-actions">
+    <!-- Search Icon -->
+    <button class="nav-link" id="search-toggle" aria-label="Search">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+      </svg>
+    </button>
+
+    <!-- Auth Links -->
+    <a href="login.html" class="nav-link" data-guest-link>Login</a>
+    <a href="profile.html" class="nav-link" data-auth-link>
+      <span data-user-name>Account</span>
+    </a>
+
+    <!-- Wishlist -->
+    <a href="wishlist.html" class="nav-link" aria-label="Wishlist">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+      </svg>
+    </a>
+
+    <!-- Cart -->
+    <a href="cart.html" class="nav-link nav-cart-wrap" aria-label="Cart">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+      </svg>
+      <span data-cart-count class="cart-count-badge" style="display:none;"></span>
+    </a>
+
+    <!-- Mobile Menu -->
+    <button id="tf-menu-btn" class="nav-link nav-mobile-btn">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="tf-mobile-menu" class="mobile-menu hidden">
+  <ul class="mobile-menu-list">
+    <li><a href="products.html" class="nav-link mobile-nav-link">Shop All</a></li>
+    <li><a href="products.html?category=Dresses" class="nav-link mobile-nav-link">Dresses</a></li>
+    <li><a href="products.html?category=Tops" class="nav-link mobile-nav-link">Tops</a></li>
+    <li><a href="products.html?category=Outerwear" class="nav-link mobile-nav-link">Outerwear</a></li>
+    <li><a href="cart.html" class="nav-link mobile-nav-link">Cart</a></li>
+    <li><a href="login.html" class="nav-link mobile-nav-link" data-guest-link>Login</a></li>
+    <li><a href="#" class="nav-link mobile-nav-link" data-auth-link data-logout>Sign Out</a></li>
+  </ul>
+</div>
+
+<!-- ─── HERO SECTION ─────────────────────────────────────────── -->
+<section class="hero-section" style="min-height: 100vh; background: linear-gradient(135deg, #f5f0e8 0%, #ede8de 100%);">
+  <div class="hero-inner">
+    <!-- Left Editorial Column -->
+    <div class="hero-content" style="padding-top:72px;">
+      <p class="section-label hero-season-label" data-reveal>Summer's Collection</p>
+      <h1 class="hero-title" data-reveal>
+        Dress<br/>
+        <em class="not-italic hero-title-em">the</em><br/>
+        Moment
+      </h1>
+      <p class="hero-subtitle" data-reveal>
+        Curated pieces that speak without words. Fashion as feeling, not formula.
+      </p>
+      <div class="hero-cta-group" data-reveal>
+        <a href="products.html" class="btn-primary">Explore Collection</a>
+        <a href="products.html?badge=New" class="btn-outline">New Arrivals</a>
+      </div>
+    </div>
+
+    <!-- Hero Image (Right) -->
+    <div class="hero-image-col">
+      <img 
+        src="/assets/hero2.jpg" 
+        alt="Hero Fashion"
+        class="hero-image"
+        data-reveal
+      />
+      <div class="hero-image-overlay"></div>
+    </div>
+
+    <!-- Decorative Number -->
+    <span class="hero-number" aria-hidden="true">26</span>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="hero-scroll-indicator" data-reveal>
+    <span class="section-label hero-scroll-label">Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── EDITORIAL STRIP ──────────────────────────────────────── -->
+<section class="editorial-strip">
+  <div class="editorial-strip-track" style="animation: marquee 25s linear infinite;">
+    <span class="section-label editorial-strip-text">Free Shipping Over $150</span>
+    <span class="editorial-strip-divider">✦</span>
+    <span class="section-label editorial-strip-text">New Arrivals Every Week</span>
+    <span class="editorial-strip-divider">✦</span>
+    <span class="section-label editorial-strip-text">Sustainable Fashion</span>
+    <span class="editorial-strip-divider">✦</span>
+    <span class="section-label editorial-strip-text">Easy Returns 30 Days</span>
+    <span class="editorial-strip-divider">✦</span>
+    <span class="section-label editorial-strip-text">Free Shipping Over 3000rs</span>
+    <span class="editorial-strip-divider">✦</span>
+    <span class="section-label editorial-strip-text">New Arrivals Every Week</span>
+    <span class="editorial-strip-divider">✦</span>
+  </div>
+</section>
+
+<!-- ─── CATEGORIES GRID ──────────────────────────────────────── -->
+<section class="categories-section">
+  <div class="section-container">
+    <div class="section-header" data-scroll-reveal>
+      <div>
+        <p class="section-label section-label-mb">Shop by</p>
+        <h2 class="font-display section-heading">Categories</h2>
+      </div>
+      <a href="products.html" class="nav-link section-view-all">View All →</a>
+    </div>
+
+    <div class="categories-grid" data-scroll-reveal>
+      <a href="products.html?category=Tops" class="category-card group">
+        <img src="/assets/shirt-thum.jpg" class="category-img category-img-desaturated" alt="Dresses" />
+        <div class="category-overlay"></div>
+        <p class="category-label">SHIRTS</p>
+      </a>
+      <a href="products.html?category=Bottoms" class="category-card group">
+        <img src="/assets/bottom-thum.jpg" class="category-img" alt="Tops" />
+        <div class="category-overlay"></div>
+        <p class="category-label">BOTTOMS</p>
+      </a>
+      <a href="products.html?category=Outerwear" class="category-card category-card-wide group">
+        <img src="https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=500&q=80" class="category-img" alt="Outerwear" />
+        <div class="category-overlay"></div>
+        <p class="category-label">Outerwear</p>
+      </a>
+      <a href="products.html?category=Dresses" class="category-card group">
+        <img src="/assets/dresses-thum.jpg" class="category-img" alt="Bottoms" />
+        <div class="category-overlay"></div>
+        <p class="category-label">Dresses</p>
+      </a>
+      <a href="products.html?category=Accessories" class="category-card group">
+        <img src="/assets/acce-thum.jpg" class="category-img" alt="Accessories" />
+        <div class="category-overlay"></div>
+        <p class="category-label">Accessories</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURED PRODUCTS ─────────────────────────────────────── -->
+<section class="featured-section">
+  <div class="section-container">
+    <div class="section-header" data-scroll-reveal>
+      <div>
+        <p class="section-label section-label-mb">Hand-picked</p>
+        <h2 class="font-display section-heading">New In</h2>
+      </div>
+      <a href="products.html" class="nav-link section-view-all">Shop All →</a>
+    </div>
+    <div id="home-products-grid" class="products-grid">
+      <!-- Skeleton loading -->
+      <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-line skeleton-line-short"></div><div class="skeleton-line skeleton-line-long"></div></div>
+      <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-line skeleton-line-short"></div><div class="skeleton-line skeleton-line-long"></div></div>
+      <div class="skeleton-card skeleton-card-md-only"><div class="skeleton-img"></div><div class="skeleton-line skeleton-line-short"></div><div class="skeleton-line skeleton-line-long"></div></div>
+      <div class="skeleton-card skeleton-card-md-only"><div class="skeleton-img"></div><div class="skeleton-line skeleton-line-short"></div><div class="skeleton-line skeleton-line-long"></div></div>
+    </div>
+    <div class="products-cta-wrap" data-scroll-reveal>
+      <a href="products.html" class="btn-outline">View Full Collection</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EDITORIAL SPLIT SECTION ──────────────────────────────── -->
+<section class="editorial-split" data-scroll-reveal>
+  <div class="editorial-split-dark">
+    <img src="/assets/hero4.jpg" class="editorial-split-img editorial-split-img-dark" alt="Editorial" />
+    <div class="editorial-split-content">
+      <p class="section-label editorial-split-label-light">The Edit</p>
+      <h3 class="font-display editorial-split-heading editorial-split-heading-light">Summer's<br/>Collections</h3>
+      <a href="products.html?badge=New" class="btn-primary editorial-btn-light" style="background:white;color:#0f0f0f;border-color:white;">Shop Now</a>
+    </div>
+  </div>
+  <div class="editorial-split-light">
+    <img src="/assets/hero1.jpg" class="editorial-split-img editorial-split-img-light" alt="Sale" />
+    <div class="editorial-split-content">
+      <p class="section-label section-label-mb-sm">Limited Time</p>
+      <h3 class="font-display editorial-split-heading">Up to 50%<br/>Off Sale</h3>
+      <a href="products.html?badge=Sale" class="btn-primary editorial-btn-self">Shop Sale</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── NEWSLETTER ────────────────────────────────────────────── -->
+<section class="newsletter-section" data-scroll-reveal>
+  <div class="newsletter-inner">
+    <p class="section-label section-label-mb">Join the Inner Circle</p>
+    <h2 class="font-display newsletter-heading">Stay in the Loop</h2>
+    <p class="newsletter-subtitle">Early access, exclusive drops, and editorial content — delivered with intention.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="Your email address" class="newsletter-input" />
+      <button class="btn-primary newsletter-btn" style="padding-top:0;padding-bottom:0;line-height:1;">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="section-container">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <p class="font-display footer-brand-name">TrendFusion</p>
+        <p class="footer-brand-desc">Curated fashion for the discerning wardrobe. Quality that outlasts trends.</p>
+      </div>
+      <div>
+        <p class="section-label section-label-mb">Shop</p>
+        <ul class="footer-link-list">
+          <li><a href="products.html" class="footer-link">All Products</a></li>
+          <li><a href="products.html?badge=New" class="footer-link">New Arrivals</a></li>
+          <li><a href="products.html?badge=Sale" class="footer-link">Sale</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="section-label section-label-mb">Account</p>
+        <ul class="footer-link-list">
+          <li><a href="login.html" class="footer-link" data-guest-link>Sign In</a></li>
+          <li><a href="register.html" class="footer-link" data-guest-link>Register</a></li>
+          <li><a href="wishlist.html" class="footer-link">Wishlist</a></li>
+          <li><a href="profile.html" class="footer-link" data-auth-link>Profile</a></li>
+          <li><a href="cart.html" class="footer-link">Cart</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="section-label section-label-mb">Info</p>
+        <ul class="footer-link-list">
+          <li><a href="#" class="footer-link">About</a></li>
+          <li><a href="#" class="footer-link">Sustainability</a></li>
+          <li><a href="#" class="footer-link">Returns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 TrendFusion. All rights reserved.</p>
+      <p class="footer-copy">Crafted with intention.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ─── SCRIPTS ───────────────────────────────────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.3/dist/lenis.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+  // Mega menu toggle
+  const trigger = document.getElementById('collections-trigger');
+  const menu = document.getElementById('mega-menu');
+  if (trigger && menu) {
+    trigger.addEventListener('mouseenter', () => menu.classList.add('open'));
+    trigger.addEventListener('mouseleave', () => menu.classList.remove('open'));
+    menu.addEventListener('mouseenter', () => menu.classList.add('open'));
+    menu.addEventListener('mouseleave', () => menu.classList.remove('open'));
+  }
+
+  // Marquee style
+  const style = document.createElement('style');
+  style.textContent = `@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`;
+  document.head.appendChild(style);
+
+  // // Load home products
+  // document.addEventListener('DOMContentLoaded', async () => {
+  //   try {
+  //     const featuredProductsResponse = await window.TF.ProductsAPI.fetchAllProducts({ limit: 4 });
+  //     const featuredProducts = featuredProductsResponse.data.data.products || []; // FIXED: backend returns { data: { products, pagination } }
+  //     const grid = document.getElementById('home-products-grid');
+  //     if (grid && products.length > 0) {
+  //       grid.innerHTML = products.slice(0, 4).map(p => window.TF.ProductCard(p)).join('');
+  //       window.TF.Animations.animateProductCardsIn('.product-card');
+  //       window.TF.Wishlist.syncAllHeartIcons();
+  //     }
+  //   } catch (e) {
+  //     console.log('Products not available:', e.message);
+  //     const grid = document.getElementById('home-products-grid');
+  //     if (grid) {
+  //       // Fallback placeholder cards
+  //       grid.innerHTML = [
+  //         { name: 'Silk Wrap Dress', brand: 'STUDIO', price: 295, images: ['https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80'], _id: '1', sizes: ['S'] },
+  //         { name: 'Linen Blazer', brand: 'ATELIER', price: 420, images: ['https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=600&q=80'], _id: '2', sizes: ['M'], badge: 'New' },
+  //         { name: 'Cashmere Knit', brand: 'ORIGINS', price: 185, oldPrice: 260, images: ['https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&q=80'], _id: '3', sizes: ['L'], badge: 'Sale' },
+  //         { name: 'Tailored Trousers', brand: 'MODERN', price: 340, images: ['https://images.unsplash.com/photo-1542574271-7f3b92e6c821?w=600&q=80'], _id: '4', sizes: ['M'] },
+  //       ].map(p => window.TF.ProductCard(p)).join('');
+  //       window.TF.Animations.animateProductCardsIn('.product-card');
+  //     }
+  //   }
+  // });
+  // Home products loading moved to main.js DOMContentLoaded
+  // (ensures window.TF.ProductCard is defined before use)
+</script>
+</body>
+</html>

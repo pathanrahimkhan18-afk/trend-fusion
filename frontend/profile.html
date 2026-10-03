@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account — TrendFusion</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="body-root">
+
+<div id="tf-transition" style="transform:scaleY(1);"></div>
+<div id="tf-loader">
+  <div class="loader-inner">
+    <p class="loader-title">TrendFusion</p>
+    <div class="tf-loader-ring"></div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="tf-nav">
+  <a href="index.html" class="nav-link nav-logo">TrendFusion</a>
+  <div class="nav-desktop-links">
+    <a href="products.html" class="nav-link">Shop All</a>
+    <a href="products.html?badge=New" class="nav-link">New In</a>
+    <a href="products.html?badge=Sale" class="nav-link">Sale</a>
+  </div>
+  <div class="nav-actions">
+    <a href="profile.html" class="nav-link" style="font-weight:500;" data-auth-link>
+      <span data-user-name>Account</span>
+    </a>
+    <a href="wishlist.html" class="nav-link" aria-label="Wishlist">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+      </svg>
+    </a>
+    <a href="cart.html" class="nav-link nav-cart-wrap" aria-label="Cart">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+      </svg>
+      <span data-cart-count class="cart-count-badge"></span>
+    </a>
+    <button id="tf-menu-btn" class="nav-link nav-mobile-btn">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div id="tf-mobile-menu" class="hidden">
+  <ul>
+    <li><a href="products.html" class="nav-link">Shop All</a></li>
+    <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link">Cart</a></li>
+    <li><a href="#" class="nav-link" data-auth-link data-logout>Sign Out</a></li>
+  </ul>
+</div>
+
+<!-- PAGE CONTENT -->
+<main class="profile-page-main">
+
+  <!-- Header -->
+  <div class="profile-header">
+    <p class="section-label profile-header-label" data-reveal>My Account</p>
+    <h1 class="profile-greeting" data-reveal id="profile-greeting">Welcome Back</h1>
+  </div>
+
+  <div class="profile-body">
+
+    <!-- Tab Navigation -->
+    <div id="profile-tabs">
+      <button class="profile-tab active" data-tab="orders">Orders</button>
+      <button class="profile-tab" data-tab="details">Personal Details</button>
+      <button class="profile-tab" data-tab="addresses">Addresses</button>
+      <button class="profile-tab" data-tab="password">Password</button>
+    </div>
+
+    <!-- ─── ORDERS TAB ─────────────────────────────── -->
+    <div id="tab-orders" class="tab-panel">
+      <div id="orders-loading" class="orders-skeleton-stack">
+        <div class="orders-skeleton-item"></div>
+        <div class="orders-skeleton-item"></div>
+        <div class="orders-skeleton-item"></div>
+      </div>
+      <div id="orders-empty" class="orders-empty-state" style="display:none;">
+        <p class="orders-empty-title">No orders yet</p>
+        <p class="orders-empty-subtitle">Your order history will appear here</p>
+        <a href="products.html" class="btn-primary">Start Shopping</a>
+      </div>
+      <div id="orders-list" class="orders-list" style="display:none;"></div>
+    </div>
+
+    <!-- ─── PERSONAL DETAILS TAB ──────────────────── -->
+    <div id="tab-details" class="tab-panel hidden">
+      <div class="profile-max-form">
+        <form id="profile-form" class="profile-form-field">
+          <div>
+            <label class="section-label" style="display:block;margin-bottom:0.5rem;">Full Name</label>
+            <input type="text" id="profile-name" class="profile-input" placeholder="Your full name" />
+          </div>
+          <div>
+            <label class="section-label" style="display:block;margin-bottom:0.5rem;">Email</label>
+            <input type="email" id="profile-email" class="profile-input profile-input-readonly" readonly />
+            <p class="profile-input-note">Email cannot be changed</p>
+          </div>
+          <div>
+            <label class="section-label" style="display:block;margin-bottom:0.5rem;">Phone</label>
+            <input type="tel" id="profile-phone" class="profile-input" placeholder="10-digit mobile number" />
+          </div>
+          <div>
+            <label class="section-label" style="display:block;margin-bottom:0.5rem;">Gender</label>
+            <select id="profile-gender" class="profile-select">
+              <option value="">Prefer not to say</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+              <option value="prefer_not_to_say">Prefer not to say</option>
+            </select>
+          </div>
+          <div class="profile-form-actions">
+            <button type="submit" class="btn-primary" id="save-profile-btn">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─── ADDRESSES TAB ─────────────────────────── -->
+    <div id="tab-addresses" class="tab-panel hidden">
+      <div id="addresses-list" class="addresses-grid"></div>
+
+      <!-- Add Address Form -->
+      <div class="address-form-wrap" id="address-form-wrap">
+        <p class="section-label address-form-title" id="address-form-title">Add New Address</p>
+        <form id="address-form" class="profile-form-field">
+          <input type="hidden" id="address-edit-id" />
+          <div class="address-form-grid2">
+            <div>
+              <label class="section-label" style="display:block;margin-bottom:0.5rem;">Label</label>
+              <select id="addr-label" class="profile-select">
+                <option value="Home">Home</option>
+                <option value="Work">Work</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="section-label" style="display:block;margin-bottom:0.5rem;">Recipient Name</label>
+              <input type="text" id="addr-name" class="profile-input" placeholder="Full name" required />
+            </div>
+          </div>
+          <div>
+            <label class="section-label" style="display:block;margin-bottom:0.5rem;">Street Address</label>
+            <input type="text" id="addr-street" class="profile-input" placeholder="Street, apartment, area" required />
+          </div>
+          <div class="address-form-grid2">
+            <div>
+              <label class="section-label" style="display:block;margin-bottom:0.5rem;">City</label>
+              <input type="text" id="addr-city" class="profile-input" placeholder="City" required />
+            </div>
+            <div>
+              <label class="section-label" style="display:block;margin-bottom:0.5rem;">State</label>
+              <input type="text" id="addr-state" class="profile-input" placeholder="State" required />
+            </div>
+          </div>
+          <div class="address-form-grid2">
+            <div>
+              <label class="section-label" style="display:block;margin-bottom:0.5rem;">Postal Code</label>
+              <input type="text" id="addr-postal" class="profile-input" placeholder="PIN code" required />
+            </div>
+            <div>
+              <label class="section-label" style="display:block;margin-bottom:0.5rem;">Country</label>
+              <input type="text" id="addr-country" value="India" class="profile-input" required />
+            </div>
+          </div>
+          <div class="profile-form-actions">
+            <button type="submit" class="btn-primary" id="save-addr-btn">Save Address</button>
+            <button type="button" id="cancel-addr-btn" class="btn-outline" style="display:none;">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─── PASSWORD TAB ──────────────────────────── -->
+    <div id="tab-password" class="tab-panel hidden">
+      <div class="profile-max-form">
+        <form id="password-form" class="profile-form-field">
+          <div>
+            <label class="section-label" style="display:block;margin-bottom:0.5rem;">Current Password</label>
+            <input type="password" id="current-password" class="profile-input" placeholder="••••••••" required />
+          </div>
+          <div>
+            <label class="section-label" style="display:block;margin-bottom:0.5rem;">New Password</label>
+            <input type="password" id="new-password" class="profile-input" placeholder="Min 8 characters" required />
+          </div>
+          <div>
+            <label class="section-label" style="display:block;margin-bottom:0.5rem;">Confirm New Password</label>
+            <input type="password" id="confirm-password" class="profile-input" placeholder="Repeat new password" required />
+          </div>
+          <button type="submit" class="btn-primary" id="save-password-btn">Update Password</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sign Out -->
+    <div class="profile-signout-row">
+      <button data-logout class="profile-signout-btn">Sign Out</button>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="profile-footer">
+  <div class="profile-footer-inner">
+    <div class="profile-footer-bottom">
+      <p class="footer-copy">© 2026 TrendFusion. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.3/dist/lenis.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  window.TF.Auth.requireAuth();
+
+  // ─── Tab switching ────────────────────────────────
+  const tabs   = document.querySelectorAll('.profile-tab');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => {
+        t.classList.remove('active');
+      });
+      tab.classList.add('active');
+
+      const target = tab.dataset.tab;
+      panels.forEach(p => p.classList.add('hidden'));
+      document.getElementById(`tab-${target}`)?.classList.remove('hidden');
+
+      if (target === 'orders')    loadOrders();
+      if (target === 'addresses') loadAddresses();
+      if (target === 'details')   loadProfile();
+    });
+  });
+
+  // ─── Helpers ─────────────────────────────────────
+  const statusColors = {
+    pending: 'background:#fef3c7;color:#92400e',
+    confirmed: 'background:#dbeafe;color:#1e40af',
+    processing: 'background:#e0e7ff;color:#3730a3',
+    shipped: 'background:#d1fae5;color:#065f46',
+    out_for_delivery: 'background:#d1fae5;color:#065f46',
+    delivered: 'background:#0f0f0f;color:white',
+    cancelled: 'background:#fee2e2;color:#991b1b',
+    refunded: 'background:#f3f4f6;color:#374151',
+    return_requested: 'background:#fef3c7;color:#92400e',
+  };
+
+  // ─── Load Orders ──────────────────────────────────
+  const loadOrders = async () => {
+    const loadingEl = document.getElementById('orders-loading');
+    const emptyEl   = document.getElementById('orders-empty');
+    const listEl    = document.getElementById('orders-list');
+    loadingEl.style.display = 'flex';
+    emptyEl.style.display   = 'none';
+    listEl.style.display    = 'none';
+
+    try {
+      const res    = await window.TF.OrdersAPI.fetchOrderHistory();
+      const orders = res.data.data.orders || [];
+      loadingEl.style.display = 'none';
+
+      if (!orders.length) { emptyEl.style.display = 'block'; return; }
+
+      listEl.innerHTML = orders.map(order => `
+        <div class="order-card" onclick="window.location.href='product.html?order=${order._id}'">
+          <div class="order-card-header">
+            <div>
+              <p class="order-number">${order.orderNumber}</p>
+              <p class="order-date">${new Date(order.createdAt).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}</p>
+            </div>
+            <span class="order-status-badge" style="${statusColors[order.status] || 'background:#f3f4f6;color:#374151'}">${order.status.replace(/_/g,' ')}</span>
+          </div>
+          <div class="order-item-thumbs">
+            ${(order.items || []).slice(0,3).map(item => `
+              <div class="order-item-thumb">
+                ${item.image ? `<img src="${item.image}" alt="${item.name}" />` : ''}
+              </div>
+            `).join('')}
+            ${order.items?.length > 3 ? `<span class="order-more-count">+${order.items.length - 3} more</span>` : ''}
+          </div>
+          <div class="order-card-footer">
+            <p class="order-item-count">${order.items?.length || 0} item${order.items?.length !== 1 ? 's' : ''}</p>
+            <p class="order-total">₹${(order.totalAmount || 0).toLocaleString('en-IN')}</p>
+          </div>
+          ${['pending','confirmed','processing'].includes(order.status) ? `
+            <div class="order-cancel-row">
+              <button onclick="event.stopPropagation(); cancelOrder('${order._id}', this)" class="order-cancel-btn">
+                Cancel Order
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+      listEl.style.display = 'flex';
+    } catch {
+      loadingEl.innerHTML = '<p style="color:#a8a29e;font-size:0.875rem;">Failed to load orders</p>';
+    }
+  };
+
+  window.cancelOrder = async (orderId, btn) => {
+    if (!confirm('Are you sure you want to cancel this order?')) return;
+    btn.disabled = true;
+    btn.textContent = 'Cancelling...';
+    try {
+      await window.TF.OrdersAPI.cancelOrder(orderId);
+      window.TF.Toast.show('Order cancelled', 'info');
+      loadOrders();
+    } catch (err) {
+      window.TF.Toast.show(err.response?.data?.message || 'Cannot cancel order', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Cancel Order';
+    }
+  };
+
+  // ─── Load Profile ─────────────────────────────────
+  const loadProfile = async () => {
+    try {
+      const res  = await window.TF.UserAPI.getProfile();
+      const user = res.data.data.user;
+      document.getElementById('profile-greeting').textContent = `Hello, ${user.name?.split(' ')[0]}`;
+      document.getElementById('profile-name').value   = user.name  || '';
+      document.getElementById('profile-email').value  = user.email || '';
+      document.getElementById('profile-phone').value  = user.phone || '';
+      if (user.gender) document.getElementById('profile-gender').value = user.gender;
+    } catch { /* silently fail */ }
+  };
+
+  // ─── Save Profile ─────────────────────────────────
+  document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn  = document.getElementById('save-profile-btn');
+    btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      await window.TF.UserAPI.updateProfile({
+        name  : document.getElementById('profile-name').value.trim(),
+        phone : document.getElementById('profile-phone').value.trim(),
+        gender: document.getElementById('profile-gender').value || undefined,
+      });
+      window.TF.Toast.show('Profile updated', 'success');
+    } catch (err) {
+      window.TF.Toast.show(err.response?.data?.message || 'Update failed', 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Save Changes';
+    }
+  });
+
+  // ─── Load Addresses ───────────────────────────────
+  const loadAddresses = async () => {
+    const listEl = document.getElementById('addresses-list');
+    listEl.innerHTML = '<p style="color:#a8a29e;font-size:0.875rem;">Loading...</p>';
+    try {
+      const res       = await window.TF.UserAPI.getAddresses();
+      const addresses = res.data.data.addresses || [];
+      if (!addresses.length) {
+        listEl.innerHTML = '<p style="color:#a8a29e;font-size:0.875rem;grid-column:1/-1;">No saved addresses yet</p>';
+        return;
+      }
+      listEl.innerHTML = addresses.map(addr => `
+        <div class="address-card">
+          <div class="address-card-header">
+            <span class="address-label-badge">${addr.label}</span>
+            ${addr.isDefault ? '<span class="address-default-badge">Default</span>' : ''}
+          </div>
+          <p class="address-text">${addr.street}, ${addr.city}, ${addr.state} - ${addr.postalCode}</p>
+          <p class="address-text">${addr.country}</p>
+          <div class="address-actions">
+            <button onclick="editAddress('${addr._id}')" class="address-action-btn">Edit</button>
+            <button onclick="deleteAddress('${addr._id}', this)" class="address-action-btn danger">Remove</button>
+          </div>
+        </div>
+      `).join('');
+    } catch {
+      listEl.innerHTML = '<p style="color:#a8a29e;font-size:0.875rem;">Failed to load addresses</p>';
+    }
+  };
+
+  // ─── Add / Edit Address ───────────────────────────
+  document.getElementById('address-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn    = document.getElementById('save-addr-btn');
+    const editId = document.getElementById('address-edit-id').value;
+    btn.disabled = true; btn.textContent = 'Saving...';
+    const payload = {
+      label     : document.getElementById('addr-label').value,
+      name      : document.getElementById('addr-name').value.trim(),
+      street    : document.getElementById('addr-street').value.trim(),
+      city      : document.getElementById('addr-city').value.trim(),
+      state     : document.getElementById('addr-state').value.trim(),
+      postalCode: document.getElementById('addr-postal').value.trim(),
+      country   : document.getElementById('addr-country').value.trim(),
+    };
+    try {
+      if (editId) {
+        await window.TF.UserAPI.updateAddress(editId, payload);
+        window.TF.Toast.show('Address updated', 'success');
+      } else {
+        await window.TF.UserAPI.addAddress(payload);
+        window.TF.Toast.show('Address added', 'success');
+      }
+      document.getElementById('address-form').reset();
+      document.getElementById('address-edit-id').value = '';
+      document.getElementById('address-form-title').textContent = 'Add New Address';
+      document.getElementById('cancel-addr-btn').style.display = 'none';
+      loadAddresses();
+    } catch (err) {
+      window.TF.Toast.show(err.response?.data?.message || 'Failed to save address', 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Save Address';
+    }
+  });
+
+  document.getElementById('cancel-addr-btn')?.addEventListener('click', () => {
+    document.getElementById('address-form').reset();
+    document.getElementById('address-edit-id').value = '';
+    document.getElementById('address-form-title').textContent = 'Add New Address';
+    document.getElementById('cancel-addr-btn').style.display = 'none';
+  });
+
+  window.editAddress = async (id) => {
+    try {
+      const res       = await window.TF.UserAPI.getAddresses();
+      const addresses = res.data.data.addresses || [];
+      const addr      = addresses.find(a => a._id === id);
+      if (!addr) return;
+      document.getElementById('address-edit-id').value  = id;
+      document.getElementById('addr-label').value       = addr.label;
+      document.getElementById('addr-name').value        = addr.name || '';
+      document.getElementById('addr-street').value      = addr.street;
+      document.getElementById('addr-city').value        = addr.city;
+      document.getElementById('addr-state').value       = addr.state;
+      document.getElementById('addr-postal').value      = addr.postalCode;
+      document.getElementById('addr-country').value     = addr.country;
+      document.getElementById('address-form-title').textContent = 'Edit Address';
+      document.getElementById('cancel-addr-btn').style.display = 'inline-block';
+      document.getElementById('address-form-wrap').scrollIntoView({ behavior: 'smooth' });
+    } catch { window.TF.Toast.show('Failed to load address', 'error'); }
+  };
+
+  window.deleteAddress = async (id, btn) => {
+    if (!confirm('Remove this address?')) return;
+    btn.disabled = true;
+    try {
+      await window.TF.UserAPI.deleteAddress(id);
+      window.TF.Toast.show('Address removed', 'info');
+      loadAddresses();
+    } catch {
+      window.TF.Toast.show('Failed to remove address', 'error');
+      btn.disabled = false;
+    }
+  };
+
+  // ─── Change Password ──────────────────────────────
+  document.getElementById('password-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const newPwd  = document.getElementById('new-password').value;
+    const confPwd = document.getElementById('confirm-password').value;
+    if (newPwd !== confPwd) {
+      window.TF.Toast.show('Passwords do not match', 'error'); return;
+    }
+    if (newPwd.length < 8) {
+      window.TF.Toast.show('Password must be at least 8 characters', 'error'); return;
+    }
+    const btn = document.getElementById('save-password-btn');
+    btn.disabled = true; btn.textContent = 'Updating...';
+    try {
+      await window.TF.UserAPI.changePassword({
+        currentPassword: document.getElementById('current-password').value,
+        newPassword    : newPwd,
+      });
+      window.TF.Toast.show('Password updated successfully', 'success');
+      document.getElementById('password-form').reset();
+    } catch (err) {
+      window.TF.Toast.show(err.response?.data?.message || 'Update failed', 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Update Password';
+    }
+  });
+
+  // ─── Initial Load ─────────────────────────────────
+  loadOrders();
+  loadProfile();
+});
+</script>
+</body>
+</html>

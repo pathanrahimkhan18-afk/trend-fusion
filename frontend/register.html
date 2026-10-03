@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — TrendFusion</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="body-root" style="overflow:hidden;">
+
+<div id="tf-transition" style="transform: scaleY(1);"></div>
+
+<div class="auth-container">
+
+  <!-- Editorial image panel (left side) -->
+  <div class="auth-image-panel">
+    <img
+      src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200&q=90"
+      alt="Fashion editorial"
+      style="opacity:0.65;"
+    />
+    <div class="auth-panel-overlay"></div>
+    <div class="auth-panel-inner">
+      <a href="index.html" class="auth-panel-logo">TrendFusion</a>
+      <div>
+        <blockquote class="auth-panel-quote">
+          "Style is a way to say<br/>who you are without<br/>having to speak."
+        </blockquote>
+        <p class="auth-panel-quote-attribution">— Rachel Zoe</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registration form panel (right side) -->
+  <div class="auth-form-panel">
+
+    <a href="index.html" class="auth-mobile-logo">TrendFusion</a>
+
+    <div class="auth-form-inner">
+      <p class="section-label auth-form-label-top">Join us</p>
+      <h1 class="auth-form-title">Create Account</h1>
+
+      <!-- Backend validation errors shown here -->
+      <div id="registration-error-message" class="auth-error-banner"></div>
+
+      <form id="registration-form" class="auth-fields-stack-sm" onsubmit="return false;">
+        <div>
+          <label class="section-label" style="display:block;margin-bottom:0.5rem;" for="full-name-input">Full Name</label>
+          <input
+            id="full-name-input"
+            type="text"
+            class="tf-input"
+            placeholder="Your name"
+            required
+            autocomplete="name"
+          />
+        </div>
+        <div>
+          <label class="section-label" style="display:block;margin-bottom:0.5rem;" for="email-address-input">Email</label>
+          <input
+            id="email-address-input"
+            type="email"
+            class="tf-input"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <div>
+          <label class="section-label" style="display:block;margin-bottom:0.5rem;" for="new-password-input">Password</label>
+          <input
+            id="new-password-input"
+            type="password"
+            class="tf-input"
+            placeholder="Min. 8 characters"
+            minlength="8"
+            required
+            autocomplete="new-password"
+          />
+          <!-- Password strength indicator -->
+          <div class="password-strength-bars" id="password-strength-bars">
+            <div class="strength-bar" id="strength-bar-1"></div>
+            <div class="strength-bar" id="strength-bar-2"></div>
+            <div class="strength-bar" id="strength-bar-3"></div>
+            <div class="strength-bar" id="strength-bar-4"></div>
+          </div>
+          <p id="password-strength-label" class="password-strength-label"></p>
+        </div>
+        <div>
+          <label class="section-label" style="display:block;margin-bottom:0.5rem;" for="confirm-password-input">Confirm Password</label>
+          <input
+            id="confirm-password-input"
+            type="password"
+            class="tf-input"
+            placeholder="Repeat password"
+            required
+            autocomplete="new-password"
+          />
+        </div>
+
+        <label class="auth-terms-row">
+          <input
+            type="checkbox"
+            id="terms-agreement-checkbox"
+            class="auth-terms-checkbox"
+            required
+          />
+          <span class="auth-terms-text">
+            I agree to TrendFusion's
+            <a href="#" class="auth-terms-link">Terms of Service</a>
+            and
+            <a href="#" class="auth-terms-link">Privacy Policy</a>
+          </span>
+        </label>
+
+        <button
+          id="submit-registration-btn"
+          type="submit"
+          class="btn-primary btn-primary-full"
+        >
+          Create Account
+        </button>
+      </form>
+
+      <p class="auth-switch-text">
+        Already have an account?
+        <a href="login.html" class="auth-switch-link">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // Redirect logged-in users away from the registration page
+  if (window.TF.Auth.isUserLoggedIn()) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Stagger form fields in on load
+  if (typeof gsap !== 'undefined') {
+    gsap.from('.auth-form-inner > *', {
+      opacity: 0, y: 20, duration: 0.7, stagger: 0.1, ease: 'power3.out', delay: 0.3,
+    });
+  }
+
+  // ─── DOM References ────────────────────────────────────────
+  const registrationFormElement       = document.getElementById('registration-form');
+  const submitRegistrationButton      = document.getElementById('submit-registration-btn');
+  const registrationErrorMessagePanel = document.getElementById('registration-error-message');
+  const fullNameInputField            = document.getElementById('full-name-input');
+  const emailAddressInputField        = document.getElementById('email-address-input');
+  const newPasswordInputField         = document.getElementById('new-password-input');
+  const confirmPasswordInputField     = document.getElementById('confirm-password-input');
+
+  // Password strength bar elements indexed by position (1–4)
+  const passwordStrengthBars = [1, 2, 3, 4].map(barNumber =>
+    document.getElementById(`strength-bar-${barNumber}`)
+  );
+  const passwordStrengthLabel = document.getElementById('password-strength-label');
+
+  // CSS class names mapped to strength score
+  const strengthBarColourClasses = ['active-red', 'active-orange', 'active-yellow', 'active-green'];
+  const strengthLevelLabels      = ['Too short', 'Weak', 'Fair', 'Strong'];
+
+  // ─── Password Strength Meter ───────────────────────────────
+  const updatePasswordStrengthIndicator = (passwordValue) => {
+    let strengthScore = 0;
+    if (passwordValue.length >= 8)          strengthScore++;
+    if (/[A-Z]/.test(passwordValue))        strengthScore++;
+    if (/[0-9]/.test(passwordValue))        strengthScore++;
+    if (/[^A-Za-z0-9]/.test(passwordValue)) strengthScore++;
+
+    passwordStrengthBars.forEach((strengthBarElement, barIndex) => {
+      const isBarActive  = barIndex < strengthScore;
+      const activeClass  = strengthBarColourClasses[Math.min(strengthScore - 1, 3)];
+      strengthBarElement.className = `strength-bar${isBarActive ? ' ' + activeClass : ''}`;
+    });
+
+    passwordStrengthLabel.textContent = passwordValue
+      ? strengthLevelLabels[Math.min(strengthScore - 1, 3)] || 'Too short'
+      : '';
+  };
+
+  newPasswordInputField.addEventListener('input', () => {
+    updatePasswordStrengthIndicator(newPasswordInputField.value);
+  });
+
+  // ─── Helper: Show Validation Error ────────────────────────
+  const showValidationError = (errorMessage) => {
+    registrationErrorMessagePanel.textContent = errorMessage;
+    registrationErrorMessagePanel.style.display = 'block';
+    if (typeof gsap !== 'undefined') {
+      gsap.to('#registration-form', { x: 8, duration: 0.1, yoyo: true, repeat: 4 });
+    }
+  };
+
+  // ─── Form Submit Handler ───────────────────────────────────
+  registrationFormElement.addEventListener('submit', async (submitEvent) => {
+    submitEvent.preventDefault();
+
+    const enteredFullName        = fullNameInputField.value.trim();
+    const enteredEmailAddress    = emailAddressInputField.value.trim();
+    const enteredPassword        = newPasswordInputField.value;
+    const enteredConfirmPassword = confirmPasswordInputField.value;
+
+    registrationErrorMessagePanel.style.display = 'none';
+
+    if (enteredPassword !== enteredConfirmPassword) {
+      showValidationError('Passwords do not match. Please try again.');
+      return;
+    }
+
+    if (enteredPassword.length < 8) {
+      showValidationError('Password must be at least 8 characters long.');
+      return;
+    }
+
+    submitRegistrationButton.textContent = 'Creating Account...';
+    submitRegistrationButton.disabled    = true;
+
+    try {
+      await window.TF.Auth.registerUser(enteredFullName, enteredEmailAddress, enteredPassword);
+
+      if (typeof gsap !== 'undefined') {
+        const pageTransitionOverlay = document.getElementById('tf-transition');
+        gsap.to(pageTransitionOverlay, {
+          scaleY: 1,
+          duration: 0.6,
+          ease: 'power4.inOut',
+          transformOrigin: 'bottom',
+          onComplete: () => { window.location.href = 'index.html'; },
+        });
+      } else {
+        window.location.href = 'index.html';
+      }
+
+    } catch (registrationError) {
+      const backendErrorMessage = registrationError.response?.data?.message
+        || registrationError.response?.data?.error
+        || 'Registration failed. Please try again.';
+
+      showValidationError(backendErrorMessage);
+      submitRegistrationButton.textContent = 'Create Account';
+      submitRegistrationButton.disabled    = false;
+    }
+  });
+
+});
+</script>
+</body>
+</html>

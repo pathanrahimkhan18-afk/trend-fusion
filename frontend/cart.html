@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart — TrendFusion</title>
+ <link rel="stylesheet" href="css/styles.css" />
+<style>.hidden { display: none !important; }</style>
+</head>
+<body class="body-root">
+
+<div id="tf-transition" style="transform: scaleY(1);"></div>
+<div id="tf-loader">
+  <div class="loader-inner">
+    <p class="font-display loader-title">TrendFusion</p>
+    <div class="tf-loader-ring"></div>
+  </div>
+</div>
+
+<nav id="tf-nav" class="nav-scrolled">
+  <a href="index.html" class="nav-logo">TrendFusion</a>
+  <div class="nav-desktop-links">
+    <a href="products.html" class="nav-link">Continue Shopping</a>
+  </div>
+  <div class="nav-actions">
+    <a href="login.html" class="nav-link" data-guest-link>Login</a>
+    <a href="#" class="nav-link" data-auth-link data-logout><span data-user-name>Account</span></a>
+    <a href="cart.html" class="nav-link nav-cart-wrap">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
+      <span data-cart-count class="cart-count-badge"></span>
+    </a>
+  </div>
+</nav>
+
+<main class="cart-main">
+  <div class="cart-container">
+
+    <div class="cart-heading-block" data-reveal>
+      <p class="section-label cart-heading-label">Your Selection</p>
+      <h1 class="font-display cart-page-title">Shopping Cart</h1>
+    </div>
+
+    <!-- Loading indicator while fetchCart() resolves -->
+    <div id="cart-loading-indicator" class="cart-loading-state">
+      <div class="tf-loader-ring cart-loader-ring"></div>
+      <p class="section-label">Loading your cart...</p>
+    </div>
+
+    <!-- Empty state — shown when the cart has no items -->
+    <div id="cart-empty-state" class="hidden cart-empty-state">
+      <div class="cart-empty-icon-wrap">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+        </svg>
+      </div>
+      <h3 class="font-display cart-empty-title">Your cart is empty</h3>
+      <p class="cart-empty-subtitle">Discover pieces crafted for you.</p>
+      <a href="products.html" class="btn-primary">Start Shopping</a>
+    </div>
+
+    <!-- Cart content — shown once items are loaded -->
+    <div id="cart-content-panel" class="hidden">
+      <div class="cart-layout-grid">
+
+        <!-- Left column: line items -->
+        <div>
+          <div class="cart-col-header">
+            <p class="section-label">Item</p>
+            <p class="section-label">Total</p>
+          </div>
+
+          <!-- Cart line items rendered here by renderCartLineItems() -->
+          <div id="cart-line-items-list"></div>
+
+          <div class="cart-col-footer">
+            <a href="products.html" class="cart-continue-link">
+              ← Continue Shopping
+            </a>
+            <button
+              onclick="handleClearCartButtonClick()"
+              class="cart-clear-btn"
+            >
+              Clear All
+            </button>
+          </div>
+        </div>
+
+        <!-- Right column: order summary sidebar -->
+        <div>
+          <div class="order-summary-box">
+            <h2 class="font-display order-summary-title">Order Summary</h2>
+
+            <div class="order-summary-rows">
+              <div class="order-summary-row">
+                <span class="order-summary-label">Subtotal</span>
+                <span id="order-subtotal-amount" class="order-summary-value">—</span>
+              </div>
+              <div class="order-summary-row">
+                <span class="order-summary-label">Shipping</span>
+                <span id="order-shipping-amount" class="order-summary-value order-summary-value--muted">Calculated at checkout</span>
+              </div>
+              <div class="order-summary-row">
+                <span class="order-summary-label">Est. Tax (8%)</span>
+                <span id="order-tax-amount" class="order-summary-value">—</span>
+              </div>
+            </div>
+
+            <!-- Promo code input (UI only —)
+            <div class="promo-input-wrap">
+              <input
+                type="text"
+                placeholder="Promo code"
+                aria-label="Promo code"
+                class="promo-input"
+              />
+              <button class="promo-apply-btn">
+                Apply
+              </button>
+            </div> -->
+
+            <div class="order-total-row">
+              <span class="section-label">Total</span>
+              <span id="order-total-amount" class="font-display order-total-amount">—</span>
+            </div>
+
+            <a href="checkout.html" id="checkout-btn" class="btn-primary checkout-btn-full">
+              Proceed to Checkout
+            </a>
+
+            <div class="order-trust-row">
+              <span class="order-trust-badge">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+                </svg>
+                Secure Checkout
+              </span>
+              <span class="order-trust-divider">|</span>
+              <span class="order-trust-badge">Free Returns</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="cart-footer">
+  <div class="cart-footer-inner">
+    <a href="index.html" class="font-display cart-footer-brand">TrendFusion</a>
+    <p class="cart-footer-copy">© 2026 TrendFusion</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.3/dist/lenis.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  // Guard: redirect to login if not authenticated
+  window.TF.Auth.requireAuthOrRedirect();
+
+  // ─── DOM References ────────────────────────────────────────
+  const cartLoadingIndicator = document.getElementById('cart-loading-indicator');
+  const cartEmptyStatePanel  = document.getElementById('cart-empty-state');
+  const cartContentPanel     = document.getElementById('cart-content-panel');
+  const cartLineItemsList    = document.getElementById('cart-line-items-list');
+  const orderSubtotalAmount  = document.getElementById('order-subtotal-amount');
+  const orderShippingAmount  = document.getElementById('order-shipping-amount');
+  const orderTaxAmount       = document.getElementById('order-tax-amount');
+  const orderTotalAmount     = document.getElementById('order-total-amount');
+
+  const FREE_SHIPPING_THRESHOLD_USD = 150;
+
+  // ─── Render Cart Line Items ───────────────────────────────
+  const renderCartLineItems = (cartData) => {
+    cartLoadingIndicator.style.display = 'none';
+
+    const cartLineItems = cartData?.items || [];
+
+    if (cartLineItems.length === 0) {
+      cartEmptyStatePanel.classList.remove('hidden');
+      cartContentPanel.classList.add('hidden');
+      return;
+    }
+
+    cartEmptyStatePanel.classList.add('hidden');
+    cartContentPanel.classList.remove('hidden');
+
+    // Build each cart line item row
+    cartLineItemsList.innerHTML = cartLineItems.map((cartLineItem, lineItemIndex) => {
+      // item.image is a single URL string (snapshot from addToCart)
+      const productThumbnailUrl = cartLineItem.product?.images?.[0]?.url
+        || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80';
+
+      const lineItemSubtotal = cartLineItem.price * cartLineItem.quantity;
+
+      return `
+        <div class="cart-item" data-line-item-id="${cartLineItem._id}">
+          <!-- Product thumbnail — navigates to product page on click -->
+          <div
+            class="cart-item-img-wrap"
+            onclick="window.location.href='product.html?id=${cartLineItem.product?._id || cartLineItem.product}'"
+          >
+            <img
+              src="${productThumbnailUrl}"
+              alt="${cartLineItem.product?.name || 'Product'}"
+              style="width:100%;aspect-ratio:3/4;object-fit:cover;transition:transform 0.5s;"
+              onmouseover="this.style.transform='scale(1.05)'"
+              onmouseout="this.style.transform='scale(1)'"
+            />
+          </div>
+
+          <!-- Item details + quantity controls -->
+          <div>
+            <p class="cart-item-brand">${cartLineItem.product?.brand || ''}</p>
+            <p
+              class="cart-item-name"
+              onclick="window.location.href='product.html?id=${cartLineItem.product?._id || cartLineItem.product}'"
+            \>${cartLineItem.product?.name || 'Product'}</p>
+            <p class="cart-item-size">Size: <strong>${cartLineItem.size}</strong></p>
+
+            <!-- Quantity stepper — sends productId + size to backend (both required) -->
+            <div class="cart-qty-row">
+              <button
+                class="qty-btn"
+                onclick="handleQuantityDecrease('${cartLineItem._id}', ${cartLineItem.quantity})"
+                aria-label="Decrease quantity"
+              >−</button>
+              <span class="cart-qty-display">${cartLineItem.quantity}</span>
+              <button
+                class="qty-btn"
+                onclick="handleQuantityIncrease('${cartLineItem._id}', ${cartLineItem.quantity})"
+                aria-label="Increase quantity"
+              >+</button>
+            </div>
+
+            <button
+              onclick="handleRemoveLineItem('${cartLineItem._id}')"
+              class="cart-item-remove-btn"
+            >Remove</button>
+          </div>
+
+          <!-- Line item subtotal -->
+          <div class="cart-item-subtotal">
+            <p class="font-display cart-item-subtotal-amount">${window.TF.formatCurrencyUSD(lineItemSubtotal)}</p>
+            <p class="cart-item-unit-price">${window.TF.formatCurrencyUSD(cartLineItem.price)} each</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // ── Order Summary Totals ─────────────────────────────────
+    // Prefer backend-computed subtotal virtual; fall back to client-side calculation
+    const orderSubtotal   = cartData.totalPrice
+      || cartLineItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    const estimatedTax    = orderSubtotal * 0.08;
+    const orderTotal      = orderSubtotal + estimatedTax;
+
+    orderSubtotalAmount.textContent = window.TF.formatCurrencyUSD(orderSubtotal);
+    orderTaxAmount.textContent      = window.TF.formatCurrencyUSD(estimatedTax);
+    orderTotalAmount.textContent    = window.TF.formatCurrencyUSD(orderTotal);
+
+    // Show free shipping badge when subtotal meets the threshold
+    const qualifiesForFreeShipping = orderSubtotal >= FREE_SHIPPING_THRESHOLD_USD;
+    orderShippingAmount.textContent = qualifiesForFreeShipping ? 'Free' : 'Calculated at checkout';
+    orderShippingAmount.className   = qualifiesForFreeShipping
+      ? 'font-medium text-green-600'
+      : 'order-summary-value order-summary-value--muted';
+
+    // Animate new items in
+    if (typeof gsap !== 'undefined') {
+      gsap.from('.cart-item', { opacity: 0, x: -20, duration: 0.5, stagger: 0.1, ease: 'power3.out' });
+    }
+  };
+
+  // ─── Initial Cart Load ────────────────────────────────────
+  try {
+    const initialCartData = await window.TF.Cart.fetchCart();
+    renderCartLineItems(initialCartData);
+  } catch (cartFetchError) {
+    cartLoadingIndicator.style.display = 'none';
+    cartEmptyStatePanel.classList.remove('hidden');
+    // 401 is handled globally by the Axios interceptor — no duplicate toast needed
+    if (cartFetchError.response?.status !== 401) {
+      window.TF.Toast.show('Failed to load your cart. Please try again.', 'error');
+    }
+  }
+
+  // ─── Quantity Decrease Handler ────────────────────────────
+  window.handleQuantityDecrease = async (itemId, currentQuantity) => {
+    if (currentQuantity <= 1) {
+      await handleRemoveLineItem(itemId);
+      return;
+    }
+    try {
+      const updatedCartData = await window.TF.Cart.updateItemQuantity(itemId, currentQuantity - 1);
+      renderCartLineItems(updatedCartData);
+    } catch (updateError) {
+      const backendErrorMessage = updateError.response?.data?.message || 'Failed to update quantity';
+      window.TF.Toast.show(backendErrorMessage, 'error');
+    }
+  };
+
+  // ─── Quantity Increase Handler ────────────────────────────
+  window.handleQuantityIncrease = async (itemId, currentQuantity) => {
+    try {
+      const updatedCartData = await window.TF.Cart.updateItemQuantity(itemId, currentQuantity + 1);
+      renderCartLineItems(updatedCartData);
+    } catch (updateError) {
+      // Backend enforces a max of 10 — show that message if it comes through
+      const backendErrorMessage = updateError.response?.data?.message || 'Failed to update quantity';
+      window.TF.Toast.show(backendErrorMessage, 'error');
+    }
+  };
+
+  // ─── Remove Line Item Handler ─────────────────────────────
+  window.handleRemoveLineItem = async (itemId) => {
+    try {
+      const updatedCartData = await window.TF.Cart.removeFromCart(itemId);
+      renderCartLineItems(updatedCartData);
+    } catch (removeError) {
+      const backendErrorMessage = removeError.response?.data?.message || 'Failed to remove item';
+      window.TF.Toast.show(backendErrorMessage, 'error');
+    }
+  };
+
+  // ─── Clear All Items Handler ──────────────────────────────
+  window.handleClearCartButtonClick = () => {
+    if (!confirm('Remove all items from your cart?')) return;
+    window.TF.Cart.clearAllCartItems().then(() => {
+      renderCartLineItems({ items: [] });
+    });
+  };
+
+});
+</script>
+</body>
+</html>

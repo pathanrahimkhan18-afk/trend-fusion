@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wishlist — TrendFusion</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="body-root">
+
+<div id="tf-transition" style="transform:scaleY(1);"></div>
+<div id="tf-loader">
+  <div class="loader-inner">
+    <p class="loader-title">TrendFusion</p>
+    <div class="tf-loader-ring"></div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="tf-nav">
+  <a href="index.html" class="nav-link nav-logo">TrendFusion</a>
+  <div class="nav-desktop-links">
+    <a href="products.html" class="nav-link">Shop All</a>
+    <a href="products.html?badge=New" class="nav-link">New In</a>
+    <a href="products.html?badge=Sale" class="nav-link">Sale</a>
+  </div>
+  <div class="nav-actions">
+    <a href="login.html" class="nav-link" data-guest-link>Login</a>
+    <a href="profile.html" class="nav-link" data-auth-link>
+      <span data-user-name>Account</span>
+    </a>
+    <a href="wishlist.html" class="nav-link" aria-label="Wishlist">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+      </svg>
+    </a>
+    <a href="cart.html" class="nav-link nav-cart-wrap" aria-label="Cart">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/>
+      </svg>
+      <span data-cart-count class="cart-count-badge"></span>
+    </a>
+    <button id="tf-menu-btn" class="nav-link nav-mobile-btn">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div id="tf-mobile-menu" class="hidden">
+  <ul>
+    <li><a href="products.html" class="nav-link">Shop All</a></li>
+    <li><a href="wishlist.html" class="nav-link">Wishlist</a></li>
+    <li><a href="cart.html" class="nav-link">Cart</a></li>
+    <li><a href="profile.html" class="nav-link" data-auth-link>Profile</a></li>
+    <li><a href="login.html" class="nav-link" data-guest-link>Login</a></li>
+    <li><a href="#" class="nav-link" data-auth-link data-logout>Sign Out</a></li>
+  </ul>
+</div>
+
+<!-- PAGE CONTENT -->
+<main class="wishlist-page-main">
+
+  <!-- Header -->
+  <div class="wishlist-header">
+    <p class="section-label wishlist-header-label" data-reveal>Your Wishlist</p>
+    <h1 class="wishlist-heading" data-reveal>Saved Pieces</h1>
+  </div>
+
+  <!-- Wishlist Body -->
+  <div class="wishlist-body">
+
+    <!-- Loading State -->
+    <div id="wishlist-loading" class="wishlist-loading-grid">
+      <!-- Skeletons injected by JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="wishlist-empty" class="wishlist-empty-state" style="display:none;">
+      <div>
+        <svg class="wishlist-empty-icon" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+        </svg>
+        <p class="wishlist-empty-title">Nothing saved yet</p>
+        <p class="wishlist-empty-subtitle">Browse the collection and save pieces you love</p>
+        <a href="products.html" class="btn-primary">Explore Collection</a>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="wishlist-grid" class="wishlist-grid" style="display:none;"></div>
+
+    <!-- Clear All -->
+    <div id="wishlist-actions" class="wishlist-actions-bar" style="display:none;">
+      <p id="wishlist-count" class="wishlist-count-text"></p>
+      <button id="clear-wishlist-btn" class="wishlist-clear-btn">
+        Clear All
+      </button>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="wishlist-footer">
+  <div class="wishlist-footer-inner">
+    <div class="wishlist-footer-grid">
+      <div class="wishlist-footer-brand-col">
+        <p class="wishlist-footer-brand-name">TrendFusion</p>
+        <p class="wishlist-footer-brand-desc">Curated fashion for the discerning wardrobe.</p>
+      </div>
+      <div>
+        <p class="section-label wishlist-footer-section-label">Shop</p>
+        <ul class="wishlist-footer-links">
+          <li><a href="products.html" class="wishlist-footer-link">All Products</a></li>
+          <li><a href="products.html?badge=New" class="wishlist-footer-link">New Arrivals</a></li>
+          <li><a href="products.html?badge=Sale" class="wishlist-footer-link">Sale</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="section-label wishlist-footer-section-label">Account</p>
+        <ul class="wishlist-footer-links">
+          <li><a href="profile.html" class="wishlist-footer-link" data-auth-link>Profile</a></li>
+          <li><a href="wishlist.html" class="wishlist-footer-link">Wishlist</a></li>
+          <li><a href="cart.html" class="wishlist-footer-link">Cart</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="section-label wishlist-footer-section-label">Info</p>
+        <ul class="wishlist-footer-links">
+          <li><a href="#" class="wishlist-footer-link">About</a></li>
+          <li><a href="#" class="wishlist-footer-link">Returns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="wishlist-footer-bottom">
+      <p class="wishlist-footer-copy">© 2026 TrendFusion. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.3/dist/lenis.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  window.TF.Auth.requireAuth();
+
+  const loadingEl = document.getElementById('wishlist-loading');
+  const emptyEl   = document.getElementById('wishlist-empty');
+  const gridEl    = document.getElementById('wishlist-grid');
+  const actionsEl = document.getElementById('wishlist-actions');
+  const countEl   = document.getElementById('wishlist-count');
+  const clearBtn  = document.getElementById('clear-wishlist-btn');
+
+  // Show skeletons
+  window.TF.Skeleton.renderSkeletonsInGrid(loadingEl, 4);
+
+  try {
+    const wishlist = await window.TF.Wishlist.fetchWishlist();
+    const products = wishlist?.products || [];
+
+    loadingEl.style.display = 'none';
+
+    if (products.length === 0) {
+      emptyEl.style.display = 'block';
+      return;
+    }
+
+    gridEl.innerHTML = products.map(p => window.TF.buildProductCardHTML(p)).join('');
+    gridEl.style.display = 'grid';
+    actionsEl.style.display = 'flex';
+    countEl.textContent = `${products.length} saved piece${products.length !== 1 ? 's' : ''}`;
+
+    window.TF.Animations.animateProductCardsIn('.product-card');
+
+  } catch (err) {
+    loadingEl.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:5rem 0;">
+      <p class="section-label" style="margin-bottom:1rem;">Failed to load wishlist</p>
+      <button onclick="location.reload()" style="font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;text-decoration:underline;background:none;border:none;cursor:pointer;">Try again</button>
+    </div>`;
+  }
+
+  // Clear all
+  clearBtn?.addEventListener('click', async () => {
+    if (!confirm('Remove all items from your wishlist?')) return;
+    try {
+      await window.TF.WishlistAPI.clearWishlist();
+      gridEl.innerHTML = '';
+      gridEl.style.display = 'none';
+      actionsEl.style.display = 'none';
+      emptyEl.style.display = 'block';
+      window.TF.Toast.show('Wishlist cleared', 'info');
+    } catch {
+      window.TF.Toast.show('Failed to clear wishlist', 'error');
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop All — TrendFusion</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="body-root">
+
+<div id="tf-transition" style="transform: scaleY(1);"></div>
+<div id="tf-loader">
+  <div class="loader-inner">
+    <p class="loader-title">TrendFusion</p>
+    <div class="tf-loader-ring"></div>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav id="tf-nav" class="nav-scrolled">
+  <a href="index.html" class="nav-link nav-logo">TrendFusion</a>
+  <div class="nav-desktop-links">
+    <a href="products.html" class="nav-link">Shop All</a>
+    <a href="products.html?badge=New" class="nav-link">New In</a>
+    <a href="products.html?badge=Sale" class="nav-link">Sale</a>
+  </div>
+  <div class="nav-actions">
+    <a href="login.html" class="nav-link" data-guest-link>Login</a>
+    <a href="#" class="nav-link" data-auth-link data-logout><span data-user-name>Account</span></a>
+    <a href="cart.html" class="nav-link nav-cart-wrap">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z"/></svg>
+      <span data-cart-count class="cart-count-badge"></span>
+    </a>
+    <button id="tf-menu-btn" class="nav-link nav-mobile-btn" aria-label="Open mobile menu">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile navigation drawer -->
+<div id="tf-mobile-menu" class="hidden">
+  <ul>
+    <li><a href="products.html" class="nav-link">Shop All</a></li>
+    <li><a href="cart.html" class="nav-link">Cart</a></li>
+    <li><a href="login.html" class="nav-link" data-guest-link>Login</a></li>
+  </ul>
+</div>
+
+<!-- Page Header -->
+<div class="shop-header">
+  <div class="shop-header-inner">
+    <p class="section-label shop-header-label" data-reveal>TrendFusion Studio</p>
+    <h1 id="shop-page-heading" class="shop-heading" data-reveal>All Pieces</h1>
+
+    <!-- Search input -->
+    <div class="shop-search-wrap" data-reveal>
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="shop-search-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+      </svg>
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Search pieces..."
+        aria-label="Search products"
+        class="shop-search-input"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- Filter + Sort Bar (sticky below navbar) -->
+<div class="shop-filter-bar">
+  <div class="shop-filter-bar-inner">
+
+    <!-- Category filter buttons -->
+    <div class="shop-filter-group" role="group" aria-label="Filter by category">
+      <button class="filter-btn filter-active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="Dresses">Dresses</button>
+      <button class="filter-btn" data-filter="Tops">Tops</button>
+      <button class="filter-btn" data-filter="Bottoms">Bottoms</button>
+      <button class="filter-btn" data-filter="Outerwear">Outerwear</button>
+      <button class="filter-btn" data-filter="Accessories">Accessories</button>
+    </div>
+
+    <div class="shop-sort-group">
+      <span id="results-count" class="section-label results-count" aria-live="polite"></span>
+
+      <select
+        id="sort-select"
+        aria-label="Sort products"
+        class="sort-select"
+      >
+        <option value="">Sort: Featured</option>
+        <option value="newest">Newest</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- Products Grid -->
+<main class="shop-main">
+  <div class="shop-main-inner">
+    <div id="products-grid" class="products-grid-listing">
+      <!-- Product cards injected here by products.js -->
+    </div>
+
+    <div class="load-more-wrap">
+      <button id="load-more-btn" class="btn-outline" style="display:none;" aria-label="Load more products">
+        Load More
+      </button>
+    </div>
+  </div>
+</main>
+
+<footer class="products-page-footer">
+  <div class="products-page-footer-inner">
+    <a href="index.html" class="products-page-footer-logo">TrendFusion</a>
+    <p class="products-page-footer-copy">© 2026 TrendFusion. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.3/dist/lenis.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+<script src="js/products.js"></script>
+
+<script>
+/**
+ * URL parameter handler — runs before products.js so the heading
+ * and active filter button are set correctly for deep-linked pages
+ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  const pageUrlParams          = new URLSearchParams(window.location.search);
+  const preselectedCategory    = pageUrlParams.get('category');
+  const preselectedBadgeFilter = pageUrlParams.get('badge');
+  const shopPageHeading        = document.getElementById('shop-page-heading');
+
+  if (preselectedCategory) {
+    document.querySelectorAll('[data-filter]').forEach(filterButton => {
+      filterButton.classList.toggle('filter-active', filterButton.dataset.filter === preselectedCategory);
+    });
+    shopPageHeading.textContent = preselectedCategory;
+  }
+
+  if (preselectedBadgeFilter === 'Sale') shopPageHeading.textContent = 'Sale';
+  if (preselectedBadgeFilter === 'New')  shopPageHeading.textContent = 'New In';
+
+});
+</script>
+</body>
+</html>

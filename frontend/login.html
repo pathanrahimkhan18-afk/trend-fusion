@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — TrendFusion</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="body-root" style="overflow:hidden;">
+
+<div id="tf-transition" style="transform: scaleY(1);"></div>
+
+<div class="auth-container">
+
+  <div class="auth-image-panel">
+    <img
+      src="/assets/login-form.jpg"
+      alt="Fashion editorial"
+      style="opacity:0.60;"
+    />
+    <div class="auth-panel-overlay"></div>
+    <div class="auth-panel-inner">
+      <a href="index.html" class="auth-panel-logo">TrendFusion</a>
+      <div>
+        <p class="section-label auth-panel-promise-label" style="color:#a8a29e;">Our Promise</p>
+        <h2 class="auth-panel-heading">
+          Fashion that<br/>speaks your truth
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login form panel (right side) -->
+  <div class="auth-form-panel">
+
+    <!-- Logo visible on mobile only -->
+    <a href="index.html" class="auth-mobile-logo">TrendFusion</a>
+
+    <div class="auth-form-inner">
+      <p class="section-label auth-form-label-top">Welcome back</p>
+      <h1 class="auth-form-title">Sign In</h1>
+
+      <!-- Backend validation error message -->
+      <div id="login-error-message" class="auth-error-banner"></div>
+
+      <form id="login-form" class="auth-fields-stack" onsubmit="return false;">
+        <div>
+          <label class="section-label" style="display:block;margin-bottom:0.5rem;" for="email-input">Email</label>
+          <input
+            id="email-input"
+            type="email"
+            class="tf-input"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <div>
+          <div class="auth-password-row">
+            <label class="section-label" for="password-input">Password</label>
+            <a href="#" class="auth-forgot-link">Forgot?</a>
+          </div>
+          <input
+            id="password-input"
+            type="password"
+            class="tf-input"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button
+          id="submit-login-btn"
+          type="submit"
+          class="btn-primary btn-primary-full"
+        >
+          Sign In
+        </button>
+      </form>
+
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-text">or</span>
+        <div class="auth-divider-line"></div>
+      </div>
+
+      <p class="auth-switch-text">
+        New to TrendFusion?
+        <a href="register.html" class="auth-switch-link">Create account</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.7/axios.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  // If the user is already logged in, skip this page entirely
+  if (window.TF.Auth.isUserLoggedIn()) {
+    const returnUrlParams  = new URLSearchParams(window.location.search);
+    const postLoginRedirect = returnUrlParams.get('redirect') || 'index.html';
+    window.location.href = postLoginRedirect;
+    return;
+  }
+
+  // Stagger the form fields in for a polished first impression
+  if (typeof gsap !== 'undefined') {
+    gsap.from('.auth-form-inner > *', {
+      opacity: 0,
+      y: 20,
+      duration: 0.7,
+      stagger: 0.12,
+      ease: 'power3.out',
+      delay: 0.3,
+    });
+  }
+
+  // ─── DOM References ────────────────────────────────────────
+  const loginFormElement       = document.getElementById('login-form');
+  const submitLoginButton      = document.getElementById('submit-login-btn');
+  const loginErrorMessagePanel = document.getElementById('login-error-message');
+  const emailInputField        = document.getElementById('email-input');
+  const passwordInputField     = document.getElementById('password-input');
+
+  // ─── Form Submit Handler ───────────────────────────────────
+  loginFormElement.addEventListener('submit', async (submitEvent) => {
+    submitEvent.preventDefault();
+
+    const enteredEmail    = emailInputField.value.trim();
+    const enteredPassword = passwordInputField.value;
+
+    if (!enteredEmail || !enteredPassword) return;
+
+    // Show loading state while awaiting the API
+    submitLoginButton.textContent = 'Signing In...';
+    submitLoginButton.disabled    = true;
+    loginErrorMessagePanel.style.display = 'none';
+
+    try {
+      await window.TF.Auth.loginUser(enteredEmail, enteredPassword);
+
+      // Animate the page transition before navigating away
+      const returnUrlParams   = new URLSearchParams(window.location.search);
+      const postLoginRedirect = returnUrlParams.get('redirect') || 'index.html';
+
+      if (typeof gsap !== 'undefined') {
+        const pageTransitionOverlay = document.getElementById('tf-transition');
+        gsap.to(pageTransitionOverlay, {
+          scaleY: 1,
+          duration: 0.6,
+          ease: 'power4.inOut',
+          transformOrigin: 'bottom',
+          onComplete: () => { window.location.href = postLoginRedirect; },
+        });
+      } else {
+        window.location.href = postLoginRedirect;
+      }
+
+    } catch (loginError) {
+      // Surface the backend's error message
+      const backendErrorMessage = loginError.response?.data?.message
+        || loginError.response?.data?.error
+        || 'Invalid credentials. Please try again.';
+
+      loginErrorMessagePanel.textContent = backendErrorMessage;
+      loginErrorMessagePanel.style.display = 'block';
+
+      submitLoginButton.textContent = 'Sign In';
+      submitLoginButton.disabled    = false;
+
+      // Shake the form to signal the failed attempt
+      if (typeof gsap !== 'undefined') {
+        gsap.to('#login-form', { x: 8, duration: 0.1, yoyo: true, repeat: 4 });
+      }
+    }
+  });
+
+});
+</script>
+</body>
+</html>
