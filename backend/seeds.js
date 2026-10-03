@@ -11,15 +11,15 @@ const seed = async () => {
     console.log("✅ MongoDB connected");
 
     // ── 1. Admin ───────────────────────────────────────────
-    await User.deleteOne({ email: "admin@trendfusion.com" });
+    await User.deleteOne({ email: "process.env.ADMIN_EMAIL" });
     await User.create({
       name: "TrendFusion Admin",
-      email: "admin@trendfusion.com",
-      password: "Admin@1234",
+      email: process.env.ADMIN_EMAIL,
+      password: process.env.ADMIN_PASSWORD,
       role: "admin",
       isActive: true,
     });
-    console.log("✅ Admin ready — admin@trendfusion.com / Admin@1234");
+    console.log("✅ Admin ready");
 
     // ── 2. Categories (matching frontend filter values exactly) ─
     const catData = [
